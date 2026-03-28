@@ -1,24 +1,45 @@
 import { useFocusEffect } from 'expo-router'
-import { useCallback } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { useFabStore } from '@/stores/useFabStore'
+import { useState, useCallback } from 'react'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function LibraryScreen() {
-  const open = useFabStore((s) => s.open)
-  const close = useFabStore((s) => s.close)
+  const [ready, setReady] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
-      open()
-      return () => {
-        close()
-      }
-    }, [open, close]),
+      setReady(true)
+    }, []),
   )
 
-  return <View style={styles.fill} />
+  if (!ready) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator color="#fff" />
+      </View>
+    )
+  }
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Library</Text>
+      </View>
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
-  fill: { flex: 1 },
+  loading: { flex: 1, backgroundColor: '#100809', alignItems: 'center', justifyContent: 'center' },
+  safe: { flex: 1, backgroundColor: '#100809' },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#fff',
+  },
 })

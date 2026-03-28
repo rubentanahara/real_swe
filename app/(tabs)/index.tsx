@@ -4,21 +4,22 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function HomeScreen() {
-  const [hasActivated, setHasActivated] = useState(false)
+  const [ready, setReady] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
-      setHasActivated(true)
+      setReady(true)
     }, []),
   )
 
-  if (!hasActivated) {
+  if (!ready) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator />
+      <View style={styles.loading}>
+        <ActivityIndicator color="#fff" />
       </View>
     )
   }
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
@@ -29,7 +30,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  loading: { flex: 1, backgroundColor: '#100809', alignItems: 'center', justifyContent: 'center' },
+  safe: { flex: 1, backgroundColor: '#100809' },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -38,5 +40,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '600',
+    color: '#fff',
   },
 })
