@@ -81,9 +81,9 @@ app → features → components/ui → lib/constants/types
 ```typescript
 // ✅ Always type component props explicitly
 interface UserCardProps {
-  userId: string;
-  onPress: (id: string) => void;
-  isLoading?: boolean;
+  userId: string
+  onPress: (id: string) => void
+  isLoading?: boolean
 }
 
 // ✅ Use discriminated unions for state modeling
@@ -91,7 +91,7 @@ type AuthState =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'authenticated'; user: User }
-  | { status: 'error'; message: string };
+  | { status: 'error'; message: string }
 
 // ❌ Never use `any` — use `unknown` and narrow it
 // ❌ Never suppress with `// @ts-ignore` — fix the actual type
@@ -149,16 +149,16 @@ app/(tabs)/home  → Composes everything, thin as possible
 ```typescript
 // ✅ Focused, composable hooks
 function useTrips() {
-  return useQuery({ queryKey: ['trips'], queryFn: fetchTrips });
+  return useQuery({ queryKey: ['trips'], queryFn: fetchTrips })
 }
 
 function useTripActions(tripId: string) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const cancel = useMutation({
     mutationFn: () => cancelTrip(tripId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trips'] }),
-  });
-  return { cancel };
+  })
+  return { cancel }
 }
 ```
 
@@ -177,7 +177,7 @@ export function useTrips() {
     queryKey: tripKeys.all,
     queryFn: tripsApi.getAll,
     staleTime: 1000 * 60 * 5, // 5 minutes
-  });
+  })
 }
 ```
 
@@ -188,9 +188,9 @@ Use Zustand for **UI state and session data** that is not server-derived.
 ```typescript
 // stores/useAuthStore.ts
 interface AuthStore {
-  token: string | null;
-  setToken: (token: string) => void;
-  clear: () => void;
+  token: string | null
+  setToken: (token: string) => void
+  clear: () => void
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -200,9 +200,9 @@ export const useAuthStore = create<AuthStore>()(
       setToken: (token) => set({ token }),
       clear: () => set({ token: null }),
     }),
-    { name: 'auth-store', storage: createJSONStorage(() => SecureStore) }
-  )
-);
+    { name: 'auth-store', storage: createJSONStorage(() => SecureStore) },
+  ),
+)
 ```
 
 ### Local State → `useState` / `useReducer`
@@ -243,16 +243,20 @@ export const Colors = {
   background: '#F9FAFB',
   text: { primary: '#111827', secondary: '#6B7280' },
   error: '#EF4444',
-} as const;
+} as const
 
 export const Spacing = {
-  xs: 4, sm: 8, md: 16, lg: 24, xl: 32,
-} as const;
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+} as const
 
 export const Typography = {
   h1: { fontSize: 28, fontWeight: '700' as const, lineHeight: 36 },
   body: { fontSize: 16, fontWeight: '400' as const, lineHeight: 24 },
-} as const;
+} as const
 ```
 
 ```typescript
@@ -272,15 +276,15 @@ const styles = StyleSheet.create({
 
 ## 9. Performance
 
-| Rule | Detail |
-|------|--------|
-| **FlatList over ScrollView** | For any list with unknown/dynamic length |
-| **`keyExtractor` always** | Use stable unique IDs, never array index |
-| **`React.memo` on list items** | Prevents re-render on parent state change |
-| **`useCallback` on handlers passed as props** | Stabilize references |
-| **`useMemo` only when expensive** | Don't memoize cheap computations |
-| **Lazy load heavy screens** | Use `React.lazy` + `Suspense` where possible |
-| **Image optimization** | Use `expo-image` over `Image` from React Native |
+| Rule                                          | Detail                                          |
+| --------------------------------------------- | ----------------------------------------------- |
+| **FlatList over ScrollView**                  | For any list with unknown/dynamic length        |
+| **`keyExtractor` always**                     | Use stable unique IDs, never array index        |
+| **`React.memo` on list items**                | Prevents re-render on parent state change       |
+| **`useCallback` on handlers passed as props** | Stabilize references                            |
+| **`useMemo` only when expensive**             | Don't memoize cheap computations                |
+| **Lazy load heavy screens**                   | Use `React.lazy` + `Suspense` where possible    |
+| **Image optimization**                        | Use `expo-image` over `Image` from React Native |
 
 ```typescript
 // ✅ Optimized list
@@ -306,11 +310,11 @@ const styles = StyleSheet.create({
 ```typescript
 // ✅ Typed API error handling
 async function fetchTrip(id: string): Promise<Trip> {
-  const res = await api.get(`/trips/${id}`);
+  const res = await api.get(`/trips/${id}`)
   if (!res.ok) {
-    throw new ApiError(res.status, await res.json());
+    throw new ApiError(res.status, await res.json())
   }
-  return res.json();
+  return res.json()
 }
 ```
 
@@ -329,15 +333,15 @@ async function fetchTrip(id: string): Promise<Trip> {
 // ✅ Store Supabase session via the official client — never persist tokens manually
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
-    storage: ExpoSecureStoreAdapter,   // backed by expo-secure-store
+    storage: ExpoSecureStoreAdapter, // backed by expo-secure-store
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,         // required for React Native
+    detectSessionInUrl: false, // required for React Native
   },
-});
+})
 
 // ❌ Never store the session JWT yourself
-await AsyncStorage.setItem('session', JSON.stringify(session));
+await AsyncStorage.setItem('session', JSON.stringify(session))
 ```
 
 - **Always use Row Level Security (RLS)** on every Supabase table — no exceptions.
@@ -370,8 +374,8 @@ additional config for TypeScript. Do **not** add Jest or Vitest.
   "scripts": {
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "test:coverage": "bun test --coverage"
-  }
+    "test:coverage": "bun test --coverage",
+  },
 }
 ```
 
@@ -409,11 +413,11 @@ describe('TripCard', () => {
 
 ```typescript
 // ✅ Mocking modules with Bun
-import { mock } from 'bun:test';
+import { mock } from 'bun:test'
 
 mock.module('../services/tripsApi', () => ({
   fetchTrips: mock(() => Promise.resolve([])),
-}));
+}))
 ```
 
 > **Note**: Bun's test runner is Jest-compatible for most matchers (`expect`, `describe`, `it`,
@@ -473,7 +477,7 @@ preload = ["./test/setup.ts"]
 
 ```typescript
 // Global test setup — runs before every test file
-import '@testing-library/react-native/extend-expect';
+import '@testing-library/react-native/extend-expect'
 // Add any global mocks here (e.g., expo-secure-store, expo-router)
 ```
 
@@ -493,12 +497,12 @@ There is **one** Supabase client in the entire app. Import it from `services/sup
 
 ```typescript
 // services/supabase/client.ts
-import { createClient } from '@supabase/supabase-js';
-import { ExpoSecureStoreAdapter } from './secureStoreAdapter';
-import type { Database } from './types';  // generated — see below
+import { createClient } from '@supabase/supabase-js'
+import { ExpoSecureStoreAdapter } from './secureStoreAdapter'
+import type { Database } from './types' // generated — see below
 
-const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
@@ -507,7 +511,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, 
     persistSession: true,
     detectSessionInUrl: false,
   },
-});
+})
 ```
 
 ### Database Types (always use generated types)
@@ -528,14 +532,14 @@ Wrap **all** Supabase queries in React Query — never call `supabase` directly 
 
 ```typescript
 // features/trips/api/useTrips.ts
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/services/supabase/client';
-import type { Trip } from '../types';
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/services/supabase/client'
+import type { Trip } from '../types'
 
 export const tripKeys = {
   all: ['trips'] as const,
   byId: (id: string) => ['trips', id] as const,
-};
+}
 
 export function useTrips() {
   return useQuery<Trip[], Error>({
@@ -544,28 +548,28 @@ export function useTrips() {
       const { data, error } = await supabase
         .from('trips')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
-      if (error) throw new Error(error.message);
-      return data;
+      if (error) throw new Error(error.message)
+      return data
     },
     staleTime: 1000 * 60 * 2,
-  });
+  })
 }
 ```
 
 ```typescript
 // ✅ Mutation with cache invalidation
 export function useCreateTrip() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (payload: NewTrip) => {
-      const { data, error } = await supabase.from('trips').insert(payload).select().single();
-      if (error) throw new Error(error.message);
-      return data;
+      const { data, error } = await supabase.from('trips').insert(payload).select().single()
+      if (error) throw new Error(error.message)
+      return data
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: tripKeys.all }),
-  });
+  })
 }
 ```
 
@@ -574,14 +578,14 @@ export function useCreateTrip() {
 ```typescript
 // services/supabase/auth.ts
 export async function signInWithEmail(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(error.message);
-  return data;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) throw new Error(error.message)
+  return data
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  const { error } = await supabase.auth.signOut()
+  if (error) throw new Error(error.message)
 }
 ```
 
@@ -590,15 +594,17 @@ Auth state is observed globally — do not poll for session. Use the listener:
 ```typescript
 // hooks/useAuthListener.ts
 export function useAuthListener() {
-  const setUser = useAuthStore((s) => s.setUser);
-  const clear = useAuthStore((s) => s.clear);
+  const setUser = useAuthStore((s) => s.setUser)
+  const clear = useAuthStore((s) => s.clear)
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      session?.user ? setUser(session.user) : clear();
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      session?.user ? setUser(session.user) : clear()
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 }
 ```
 
@@ -612,12 +618,14 @@ useEffect(() => {
   const channel = supabase
     .channel('trips-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'trips' }, (payload) => {
-      queryClient.invalidateQueries({ queryKey: tripKeys.all });
+      queryClient.invalidateQueries({ queryKey: tripKeys.all })
     })
-    .subscribe();
+    .subscribe()
 
-  return () => { supabase.removeChannel(channel); };
-}, []);
+  return () => {
+    supabase.removeChannel(channel)
+  }
+}, [])
 ```
 
 ### Storage
@@ -625,12 +633,12 @@ useEffect(() => {
 ```typescript
 // services/supabase/storage.ts
 export async function uploadAvatar(userId: string, file: File): Promise<string> {
-  const path = `avatars/${userId}/${Date.now()}`;
-  const { error } = await supabase.storage.from('avatars').upload(path, file);
-  if (error) throw new Error(error.message);
+  const path = `avatars/${userId}/${Date.now()}`
+  const { error } = await supabase.storage.from('avatars').upload(path, file)
+  if (error) throw new Error(error.message)
 
-  const { data } = supabase.storage.from('avatars').getPublicUrl(path);
-  return data.publicUrl;
+  const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+  return data.publicUrl
 }
 ```
 
@@ -640,17 +648,17 @@ Edge Functions live in `supabase/functions/`. Each function is a separate Deno m
 
 ```typescript
 // supabase/functions/send-notification/index.ts
-import { serve } from 'https://deno.land/std/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { serve } from 'https://deno.land/std/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 serve(async (req) => {
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!  // service role is only safe here
-  );
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, // service role is only safe here
+  )
   // ...
-  return new Response(JSON.stringify({ ok: true }), { status: 200 });
-});
+  return new Response(JSON.stringify({ ok: true }), { status: 200 })
+})
 ```
 
 ### Migrations
@@ -678,28 +686,31 @@ bun run supabase db reset                         # Reset local DB + re-run all 
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": { "APP_ENV": "development" }
+      "env": { "APP_ENV": "development" },
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "env": { "APP_ENV": "staging" }
+      "env": { "APP_ENV": "staging" },
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
-      "env": { "APP_ENV": "production" }
-    }
+      "env": { "APP_ENV": "production" },
+    },
   },
   "submit": {
     "production": {
       "ios": { "appleId": "...", "ascAppId": "...", "appleTeamId": "..." },
-      "android": { "serviceAccountKeyPath": "./google-service-account.json", "track": "production" }
-    }
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "production",
+      },
+    },
   },
   "update": {
-    "channel": "production"
-  }
+    "channel": "production",
+  },
 }
 ```
 
@@ -709,9 +720,9 @@ All secrets live in **EAS Secrets** — never in `.env` files committed to git.
 
 ```typescript
 // app.config.ts — maps EAS env vars to Expo config
-import { ExpoConfig } from 'expo/config';
+import { ExpoConfig } from 'expo/config'
 
-const APP_ENV = process.env.APP_ENV ?? 'development';
+const APP_ENV = process.env.APP_ENV ?? 'development'
 
 const envConfig = {
   development: {
@@ -732,9 +743,9 @@ const envConfig = {
     appName: 'MyApp',
     bundleId: 'com.myapp',
   },
-} as const;
+} as const
 
-const config = envConfig[APP_ENV as keyof typeof envConfig];
+const config = envConfig[APP_ENV as keyof typeof envConfig]
 
 export default (): ExpoConfig => ({
   name: config.appName,
@@ -746,7 +757,7 @@ export default (): ExpoConfig => ({
     supabaseAnonKey: config.supabaseAnonKey,
     eas: { projectId: process.env.EAS_PROJECT_ID },
   },
-});
+})
 ```
 
 - All `EXPO_PUBLIC_*` vars are embedded at build time — safe for the anon key, never for service role.
@@ -770,14 +781,14 @@ runtimeVersion: { policy: 'appVersion' },  // OTA only applies to matching app v
 
 ### Workflow Summary
 
-| Action | Command |
-|--------|---------|
-| Install dev client | `eas build --profile development --platform ios` |
-| Internal QA build | `eas build --profile preview --platform all` |
-| Production build | `eas build --profile production --platform all` |
-| OTA JS update | `eas update --channel production --message "..."` |
-| Submit to stores | `eas submit --platform all --profile production` |
-| View build logs | `eas build:list` |
+| Action             | Command                                           |
+| ------------------ | ------------------------------------------------- |
+| Install dev client | `eas build --profile development --platform ios`  |
+| Internal QA build  | `eas build --profile preview --platform all`      |
+| Production build   | `eas build --profile production --platform all`   |
+| OTA JS update      | `eas update --channel production --message "..."` |
+| Submit to stores   | `eas submit --platform all --profile production`  |
+| View build logs    | `eas build:list`                                  |
 
 ### CI/CD Pipeline (GitHub Actions example)
 
@@ -900,3 +911,4 @@ eas secret:create --name KEY --value VALUE           # Add EAS Secret
 
 *Keep this file up to date as the project evolves. Architectural decisions that affect these guidelines
 should be captured in an ADR (`docs/adr/`) before updating this document.*
+```

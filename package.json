@@ -1,22 +1,58 @@
 {
   "name": "real_swe",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "expo-router/entry",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.95.2",
+    "axios": "^1.14.0",
     "expo": "~55.0.9",
+    "expo-constants": "~55.0.9",
+    "expo-font": "~55.0.4",
+    "expo-haptics": "~55.0.9",
+    "expo-image": "~55.0.6",
+    "expo-linking": "~55.0.9",
+    "expo-router": "~55.0.8",
+    "expo-secure-store": "^55.0.9",
+    "expo-splash-screen": "~55.0.13",
     "expo-status-bar": "~55.0.4",
+    "nativewind": "^4.2.3",
     "react": "19.2.0",
-    "react-native": "0.83.4"
+    "react-native": "0.83.4",
+    "react-native-bottom-tabs": "^1.1.0",
+    "react-native-safe-area-context": "~5.6.2",
+    "react-native-screens": "~4.23.0",
+    "tailwindcss": "^4.2.2",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
-    "@types/react": "~19.2.2",
-    "typescript": "~5.9.2"
+    "@types/react": "^19.2.14",
+    "@types/react-native": "^0.73.0",
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "^55.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
+    "typescript": "^6.0.2"
   },
-  "private": true
+  "private": true,
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
